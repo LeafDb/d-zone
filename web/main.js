@@ -169,11 +169,17 @@ function initWebsocket() {
             }
             console.log((Object.keys(users.actors).length).toString()+' actors created');
             game.renderer.canvases[0].onResize();
-        } else if(data.type == 'presence') { // User status update
+        }
+        /**
+		*KTN - React to things here
+		**/
+		else if(data.type == 'presence') { // User status update
+			soundHandler("woosh");
             if(!users.actors[data.data.uid]) return;
             users.actors[data.data.uid].updatePresence(data.data.status);
         } else if(data.type == 'message') { // Chatter
             users.queueMessage(data.data);
+			soundHandler("blop");
         } else if(data.type == 'error') {
             window.alert(data.data.message);
             if(!game.world) joinServer({id: 'default'});
@@ -220,4 +226,14 @@ function getStartupServer() {
     return startupServer;
 }
 
+
 //setTimeout(function() { game.paused = true; },1000);
+
+/**
+*KTN - Custom functions here
+*/
+
+  function soundHandler(fileName) {
+	  var sound = new Audio('static/sounds/' + fileName + '.mp3');
+	  sound.play();
+  }
